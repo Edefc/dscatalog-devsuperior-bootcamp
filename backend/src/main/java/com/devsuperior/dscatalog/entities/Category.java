@@ -59,7 +59,5 @@ public class Category implements Serializable{
 			return false;
 		return true;
 	}
-	
-	
-	
+		
 }
