@@ -2,6 +2,8 @@ package com.devsuperior.dscatalog.repositories;
 
 import java.util.Optional;
 
+import javax.persistence.EntityNotFoundException;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,7 +22,7 @@ public class ProductRepositoryTests {
 
 	private long existingId;
 	private long nonExistingId;
-	private long countTotalProducts; 
+	private long countTotalProducts;
 
 	@BeforeEach
 	void setUp() throws Exception {
@@ -28,19 +30,17 @@ public class ProductRepositoryTests {
 		nonExistingId = 100L;
 		countTotalProducts = 25L;
 	}
-	
+
 	@Test
 	public void saveShouldPersistWhithAutoIncrementWhenIdIsNull() {
 		Product product = Factory.createProduct();
 		product.setId(null);
-		
+
 		product = productRepository.save(product);
-		
+
 		Assertions.assertNotNull(product.getId());
 		Assertions.assertEquals(countTotalProducts + 1, product.getId());
-		
-		
-		
+
 	}
 
 	@Test
@@ -59,6 +59,23 @@ public class ProductRepositoryTests {
 		Assertions.assertThrows(EmptyResultDataAccessException.class, () -> {
 			productRepository.deleteById(nonExistingId);
 		});
+	}
+
+	@Test
+	public void findByIdShouldReturnNonEmptyOpyionalWhenIdExists() {
+
+		Optional<Product> result = productRepository.findById(existingId);
+		
+		Assertions.assertTrue(result.isPresent());
+
+	}
+
+	@Test
+	public void findByIdShouldReturnEmptyOpyionalWhenIdDoesNotExists() {
+		
+			Optional<Product> result = productRepository.findById(nonExistingId);
+			Assertions.assertTrue(result.isEmpty());
+		
 	}
 
 }
