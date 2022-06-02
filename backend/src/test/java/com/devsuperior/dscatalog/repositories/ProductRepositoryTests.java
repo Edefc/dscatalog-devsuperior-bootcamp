@@ -2,8 +2,6 @@ package com.devsuperior.dscatalog.repositories;
 
 import java.util.Optional;
 
-import javax.persistence.EntityNotFoundException;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
