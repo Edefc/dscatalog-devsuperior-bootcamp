@@ -26,7 +26,7 @@ import com.devsuperior.dscatalog.entities.Category;
 import com.devsuperior.dscatalog.entities.Product;
 import com.devsuperior.dscatalog.repositories.CategoryRepository;
 import com.devsuperior.dscatalog.repositories.ProductRepository;
-import com.devsuperior.dscatalog.services.exceptions.DatabaseExeception;
+import com.devsuperior.dscatalog.services.exceptions.DatabaseException;
 import com.devsuperior.dscatalog.services.exceptions.ResourceNotFoundException;
 import com.devsuperior.dscatalog.tests.Factory;
 
@@ -150,7 +150,7 @@ public class ProductServiceTests {
 	@Test
 	public void deleteShouldThrowDatabaseExeceptionWhenDependentId() {
 
-		Assertions.assertThrows(DatabaseExeception.class, () -> {
+		Assertions.assertThrows(DatabaseException.class, () -> {
 			service.delete(dependentId);
 		});
 

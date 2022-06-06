@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.devsuperior.dscatalog.dto.CategoryDTO;
 import com.devsuperior.dscatalog.entities.Category;
 import com.devsuperior.dscatalog.repositories.CategoryRepository;
-import com.devsuperior.dscatalog.services.exceptions.DatabaseExeception;
+import com.devsuperior.dscatalog.services.exceptions.DatabaseException;
 import com.devsuperior.dscatalog.services.exceptions.ResourceNotFoundException;
 
 @Service
@@ -83,7 +83,7 @@ public class CategoryService {
 			throw new ResourceNotFoundException("Id não encontrado " + id);
 		}
 		catch(DataIntegrityViolationException e) {
-			throw new DatabaseExeception("Violação de integridade");
+			throw new DatabaseException("Violação de integridade");
 		}
 	}
 	
