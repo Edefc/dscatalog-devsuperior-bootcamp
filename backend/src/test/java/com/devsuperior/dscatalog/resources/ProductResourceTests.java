@@ -5,7 +5,9 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -62,6 +64,9 @@ public class ProductResourceTests {
 	when(productService.findById(existingId)).thenReturn(productDTO);
 	when(productService.findById(nonExistingId)).thenThrow(ResourceNotFoundException.class);
 	
+	when(productService.insert(any())).thenReturn(productDTO);
+	
+	
 	when(productService.update(eq(existingId), any())).thenReturn(productDTO);
 	when(productService.update(eq(nonExistingId), any())).thenThrow(ResourceNotFoundException.class);
 	
@@ -69,6 +74,45 @@ public class ProductResourceTests {
 	doThrow(ResourceNotFoundException.class).when(productService).delete(nonExistingId);
 	doThrow(DatabaseException.class).when(productService).delete(dependentId);
 	
+	}
+	
+	@Test
+	public void deleteShouldReturnNoContentWhenIdExist() throws Exception {
+		
+		ResultActions result =
+				mockMvc.perform(delete("/products/{id}", existingId)
+						.accept(MediaType.APPLICATION_JSON));
+		result.andExpect(status().isNoContent());
+		
+	}
+	
+	@Test
+	public void deleteShouldReturnNotFoundContentWhenIddoesNotExist() throws Exception {
+		
+		ResultActions result =
+				mockMvc.perform(delete("/products/{id}", nonExistingId)
+						.accept(MediaType.APPLICATION_JSON));
+		result.andExpect(status().isNotFound());
+		
+	}
+	
+	
+	@Test
+	public void insertShouldReturnProductDTOCreated() throws Exception {
+		
+		String jsonBody = objectMapper.writeValueAsString(productDTO);
+		
+		ResultActions result =
+				mockMvc.perform(post("/products")
+						.content(jsonBody)
+						.contentType(MediaType.APPLICATION_JSON)
+						.accept(MediaType.APPLICATION_JSON)
+						);
+		result.andExpect(status().isCreated());
+		result.andExpect(jsonPath("$.id").exists());
+		result.andExpect(jsonPath("$.name").exists());
+		result.andExpect(jsonPath("$.description").exists());
+		
 	}
 	
 	@Test
