@@ -95,8 +95,7 @@ public class ProductResourceTests {
 		result.andExpect(status().isNotFound());
 		
 	}
-	
-	
+		
 	@Test
 	public void insertShouldReturnProductDTOCreated() throws Exception {
 		
